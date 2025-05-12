@@ -3,7 +3,7 @@ import MySQLdb
 
 app = Flask(__name__)
 
-# Koneksi ke MySQL
+# Koneksi ke database
 db = MySQLdb.connect(
     host="localhost",
     user="root",
@@ -11,6 +11,18 @@ db = MySQLdb.connect(
     db="simple_recipe"
 )
 cursor = db.cursor()
+
+def parse_item_with_weight(data_str):
+    """
+    Mengubah string 'item:weight, item2:weight' menjadi dict {'item': weight}
+    """
+    result = {}
+    for item in data_str.split(','):
+        parts = item.strip().split(':')
+        name = parts[0].strip().lower()
+        weight = int(parts[1]) if len(parts) > 1 else 1
+        result[name] = weight
+    return result
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -25,19 +37,23 @@ def index():
 
         for recipe in resep_list:
             id, nama, bahan_str, alat_str, langkah = recipe
-            bahan_resep = [b.strip().lower() for b in bahan_str.split(',')]
-            alat_resep = [a.strip().lower() for a in alat_str.split(',')]
 
-            # Hitung kecocokan bahan
-            bahan_cocok = sum(1 for b in bahan_resep if b in bahan_input)
-            alat_cocok = sum(1 for a in alat_resep if a in alat_input)
+            bahan_resep = parse_item_with_weight(bahan_str)
+            alat_resep = parse_item_with_weight(alat_str)
 
-            skor_bahan = bahan_cocok / len(bahan_resep) if bahan_resep else 0
-            skor_alat = alat_cocok / len(alat_resep) if alat_resep else 0
+            total_bobot_bahan = sum(bahan_resep.values())
+            total_bobot_alat = sum(alat_resep.values())
 
-            skor_total = round((skor_bahan + skor_alat) / 2 * 100, 2)  # dalam persen
+            bobot_bahan_cocok = sum(bobot for b, bobot in bahan_resep.items() if b in bahan_input)
+            bobot_alat_cocok = sum(bobot for a, bobot in alat_resep.items() if a in alat_input)
 
-            if skor_total > 0:  # Hanya tampilkan jika minimal ada yang cocok
+            skor_bahan = bobot_bahan_cocok / total_bobot_bahan if total_bobot_bahan else 0
+            skor_alat = bobot_alat_cocok / total_bobot_alat if total_bobot_alat else 0
+
+            # Gabungkan skor dengan bobot: bahan 70%, alat 30%
+            skor_total = round((0.7 * skor_bahan + 0.3 * skor_alat) * 100, 2)
+
+            if skor_total > 0:
                 hasil.append({
                     'nama': nama,
                     'bahan': bahan_str,
@@ -46,7 +62,6 @@ def index():
                     'skor': skor_total
                 })
 
-        # Urutkan berdasarkan skor tertinggi
         hasil = sorted(hasil, key=lambda x: x['skor'], reverse=True)
 
         return render_template('hasil.html', hasil=hasil)
