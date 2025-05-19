@@ -1,28 +1,27 @@
 from flask import Flask, render_template, request
-import MySQLdb
+import mysql.connector
 
 app = Flask(__name__)
 
-# Koneksi ke database
-db = MySQLdb.connect(
+# Koneksi ke database baru: simple_recipe
+conn = mysql.connector.connect(
     host="localhost",
     user="root",
-    passwd="",
-    db="simple_recipe"
+    password="",
+    database="simple_recipe"
 )
-cursor = db.cursor()
+
+cursor = conn.cursor()
 
 def parse_item_with_weight(data_str):
-    """
-    Mengubah string 'item:weight, item2:weight' menjadi dict {'item': weight}
-    """
     result = {}
     for item in data_str.split(','):
-        parts = item.strip().split(':')
-        name = parts[0].strip().lower()
+        parts = item.strip().lower().split(':')
+        name = parts[0].strip()
         weight = int(parts[1]) if len(parts) > 1 else 1
         result[name] = weight
     return result
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -36,7 +35,7 @@ def index():
         hasil = []
 
         for recipe in resep_list:
-            id, nama, bahan_str, alat_str, langkah = recipe
+            id, nama_resep, bahan_str, alat_str, langkah = recipe
 
             bahan_resep = parse_item_with_weight(bahan_str)
             alat_resep = parse_item_with_weight(alat_str)
@@ -50,12 +49,11 @@ def index():
             skor_bahan = bobot_bahan_cocok / total_bobot_bahan if total_bobot_bahan else 0
             skor_alat = bobot_alat_cocok / total_bobot_alat if total_bobot_alat else 0
 
-            # Gabungkan skor dengan bobot: bahan 70%, alat 30%
             skor_total = round((0.7 * skor_bahan + 0.3 * skor_alat) * 100, 2)
 
             if skor_total > 0:
                 hasil.append({
-                    'nama': nama,
+                    'judul': nama_resep,
                     'bahan': bahan_str,
                     'alat': alat_str,
                     'langkah': langkah,
@@ -63,7 +61,6 @@ def index():
                 })
 
         hasil = sorted(hasil, key=lambda x: x['skor'], reverse=True)
-
         return render_template('hasil.html', hasil=hasil)
 
     return render_template('index.html')
