@@ -1,70 +1,148 @@
-/* Reset dasar */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  body {
-    background-color: #f7f7f7;
-    color: #333;
-    padding: 20px;
-  }
-  
-  /* Container utama */
-  form {
-    max-width: 600px;
-    margin: auto;
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Judul */
-  h2 {
-    text-align: center;
-    color: #1e88e5;
-    margin-bottom: 20px;
-  }
-  
-  /* Label bagian */
-  h4 {
-    font-size: 20px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    color: #333;
-  }
-  
-  /* Checkbox */
-  input[type="checkbox"] {
-    margin-right: 10px;
-    transform: scale(1.2);
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  /* Tombol */
-  button[type="submit"] {
-    background-color: #1e88e5;
-    color: white;
-    border: none;
-    padding: 14px 24px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 20px;
-    width: 100%;
-    transition: background-color 0.3s ease;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: #1565c0;
-  }
-  
+body {
+  background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.form-card {
+  max-width: 720px;
+  margin: auto;
+  background-color: #fff;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+.form-check-input {
+  display: none;
+}
+
+.btn-primary {
+  background-color: #1976d2;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1565c0;
+  transform: translateY(-1px);
+}
+
+.bahan-card, .alat-card {
+  position: relative;
+  width: 100px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: 0.3s;
+  text-align: center;
+  cursor: pointer;
+}
+
+.bahan-card {
+  background-color: #ffffff;
+  border: 2px solid #cce5ff;
+}
+
+.bahan-card:hover {
+  background-color: #e3f2fd;
+  border-color: #2196f3;
+}
+
+.alat-card {
+  background-color: #fef3e2;
+  border: 2px solid #ffd199;
+}
+
+.alat-card:hover {
+  background-color: #ffe6d5;
+  border-color: #ff9800;
+}
+
+.item-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 6px;
+}
+
+.bahan-card input:checked ~ .checkmark {
+  display: block;
+  background-color: #2196f3;
+}
+
+.alat-card input:checked ~ .checkmark {
+  display: block;
+  background-color: #ff5722;
+}
+
+.checkmark {
+  display: none;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  color: white;
+  font-size: 14px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px white;
+  z-index: 1;
+}
+
+/* Halaman Hasil */
+.hasil-container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.hasil-card {
+  border: 2px solid #ff7043;
+  border-radius: 16px;
+  background-color: #fff3e0;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.hasil-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.hasil-title {
+  font-weight: bold;
+  color: #e64a19;
+}
+
+.badge-score {
+  background-color: #ffcc80;
+  color: #bf360c;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.item-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.item-label {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ffa726;
+  border-radius: 12px;
+  padding: 4px 8px;
+}
